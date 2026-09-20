@@ -57,14 +57,13 @@ Sans `.env`, le cloud est inactif ; le local fonctionne quand même.
 
 ## GitHub + hébergement
 
+Repo : https://github.com/YTFeez/artillerie-map  
+Site : https://ytfeez.github.io/artillerie-map/
+
+Le workflow `.github/workflows/deploy-pages.yml` build Vite et publie `dist` sur GitHub Pages à chaque push sur `master`.
+
 ```bash
-git init   # si besoin
-git add .
-git commit -m "Initial FIRE GRID FDC"
-gh repo create artillerie-map --public --source=. --remote=origin --push
+git push -u origin master
 ```
 
-Hébergement statique (GitHub Pages / Cloudflare Pages / Vercel) :
-- Build : `npm run build`
-- Dossier : `dist`
-- Ajoutez les mêmes variables `VITE_SUPABASE_*` dans les secrets CI / env du host
+Variables cloud (optionnel) : ajoutez `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY` dans **Settings → Secrets and variables → Actions**, puis adaptez le workflow si besoin.
