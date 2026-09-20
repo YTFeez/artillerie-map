@@ -139,11 +139,11 @@ export function FirePanel({
   return (
     <aside className="panel">
       <header className="panel-head">
-        <p className="brand">AIR 50 · FIRE GRID</p>
+        <p className="brand">FIRE GRID · FDC</p>
         <h1>Poste de tir</h1>
         <p className="lede">
-          Choisissez le mode — le logiciel calcule pression, élévation, azimut
-          corrigé et ordres de tir.
+          Mode, pression, hausse, azimut — calculés. Carte et trajectoire sur le
+          même plan.
         </p>
       </header>
 

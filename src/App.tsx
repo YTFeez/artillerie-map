@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
+import { FireHud } from './components/FireHud'
 import { FirePanel } from './components/FirePanel'
 import { MapView } from './components/MapView'
-import { Trajectory3D } from './components/Trajectory3D'
 import {
   computeFireMission,
   DEFAULT_AIR_CANNON,
@@ -41,6 +41,7 @@ export default function App() {
   const [cannon, setCannon] = useState<AirCannonConfig>(DEFAULT_AIR_CANNON)
   const [wind, setWind] = useState<WindConfig>(DEFAULT_WIND)
   const [fireMode, setFireMode] = useState<FireMode>('direct')
+  const [pitch3d, setPitch3d] = useState(true)
 
   const counts = useMemo(() => {
     const c = { gun: 0, target: 0, observer: 0, custom: 0 }
@@ -155,8 +156,10 @@ export default function App() {
       traj: mission?.inRange ? mission.traj : null,
       zone: mission?.inRange ? mission.zone : null,
       azimuthDeg: azDeg,
+      mission,
+      wind,
     }),
-    [mission, azDeg],
+    [mission, azDeg, wind],
   )
 
   return (
@@ -186,19 +189,6 @@ export default function App() {
 
       <main className="map-shell">
         <div className="toolbar">
-          <div className="tool-group" role="group" aria-label="Mode de tir">
-            {(Object.keys(FIRE_MODE_META) as FireMode[]).map((mode) => (
-              <button
-                key={mode}
-                type="button"
-                className={`tool${fireMode === mode ? ' is-active' : ''}`}
-                onClick={() => setFireMode(mode)}
-              >
-                {FIRE_MODE_META[mode].label}
-              </button>
-            ))}
-          </div>
-
           <div className="tool-group" role="group" aria-label="Placement">
             {(Object.keys(ROLE_META) as MarkerRole[]).map((role) => {
               const meta = ROLE_META[role]
@@ -244,35 +234,34 @@ export default function App() {
           </button>
         </div>
 
-        <MapView
-          layer={layer}
-          markers={markers}
-          placeMode={placeMode}
-          gunId={gunId}
-          targetId={targetId}
-          fireOverlay={fireOverlay}
-          onPlace={onPlace}
-          onSelectMarker={onSelectMarker}
-          onMoveMarker={onMoveMarker}
-        />
-
-        <Trajectory3D
-          traj={mission?.inRange ? mission.traj : null}
-          zone={mission?.inRange ? mission.zone : null}
-          wind={wind}
-          azimuthDeg={azDeg}
-          muzzleVelocity={mission?.muzzleVelocity ?? 0}
-          branch={FIRE_MODE_META[fireMode].branch}
-          onBranch={(b) => setFireMode(b === 'high' ? 'plunging' : 'direct')}
-          hasHigh={true}
-          targetRangeM={rangeM || 200}
-          modeLabel={FIRE_MODE_META[fireMode].label}
-        />
+        <div className="map-stage">
+          <MapView
+            layer={layer}
+            markers={markers}
+            placeMode={placeMode}
+            gunId={gunId}
+            targetId={targetId}
+            fireOverlay={fireOverlay}
+            pitch3d={pitch3d}
+            onPlace={onPlace}
+            onSelectMarker={onSelectMarker}
+            onMoveMarker={onMoveMarker}
+          />
+          <FireHud
+            mission={mission}
+            fireMode={fireMode}
+            wind={wind}
+            rangeM={rangeM}
+            pitch3d={pitch3d}
+            onTogglePitch={() => setPitch3d((v) => !v)}
+            onFireMode={setFireMode}
+          />
+        </div>
 
         <p className="hint">
           {placeMode
-            ? `Mode placement : ${ROLE_META[placeMode].label} — cliquez la carte.`
-            : `Mission ${FIRE_MODE_META[fireMode].label} — le logiciel calcule pression, angle et azimut.`}
+            ? `Placement : ${ROLE_META[placeMode].label} — cliquez la carte.`
+            : `Plan unique · ${FIRE_MODE_META[fireMode].label} · trajectoire 3D + zones + ordres sur la carte.`}
         </p>
       </main>
     </div>

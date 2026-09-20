@@ -23,25 +23,25 @@ export const ROLE_META: Record<
   gun: {
     label: 'Pièce / batterie',
     short: 'PCE',
-    color: '#3d8b5a',
+    color: '#4f7a5a',
     defaultName: 'Pièce',
   },
   target: {
     label: 'Cible',
     short: 'CBL',
-    color: '#c44b3c',
+    color: '#8f4a42',
     defaultName: 'Cible',
   },
   observer: {
     label: 'Observateur (FO)',
     short: 'FO',
-    color: '#3a7eb8',
+    color: '#5a7380',
     defaultName: 'Observateur',
   },
   custom: {
     label: 'Repère',
     short: 'REP',
-    color: '#c9a227',
+    color: '#8a7a48',
     defaultName: 'Repère',
   },
 }
